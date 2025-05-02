@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Recommender</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            line-height: 1.6; 
+            margin: 0; 
+            padding: 0; 
+            background: #f4f4f4; 
+        }
+        .container { 
+            width: 90%; 
+            max-width: 600px; 
+            margin: auto; 
+            overflow: hidden; 
+            background: #fff; 
+            padding: 20px; 
+            box-shadow: 0 0 10px #ccc; 
+            border-radius: 8px;
+        }
+        label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: bold;
+        }
+        input, select, button { 
+            width: 100%; 
+            padding: 10px; 
+            margin-bottom: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button { 
+            background: #28a745; 
+            color: #fff; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 16px;
+        }
+        button:hover { 
+            background: #218838; 
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Client Recommender</h2>
+    <form action="/" method="POST">
+        <label for="company_size">Company Size:</label>
+        <select id="company_size" name="company_size" required>
+            <option value="1-25">1-25</option>
+            <option value="26-100">26-100</option>
+            <option value="101-500">101-500</option>
+            <option value="500-1000">500-1000</option>
+            <option value="More than 1000">More than 1000</option>
+        </select>
+
+        <label for="is_premium">Is Premium?</label>
+        <select id="is_premium" name="is_premium" required>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+
+        <label for="subscription_status">Subscription Status ?</label>
+        <select id="subscription_status" name="subscription_status" required>
+            <option value="1">No</option>
+            <option value="2">Yes</option>
+        </select>
+
+        <label for="jobma_catcher_status">Jobma Catchr status  ?</label>
+        <select id="jobma_catcher_status" name="jobma_catcher_status" required>
+            <option value="1">No</option>
+            <option value="2">Yes</option>
+        </select>
+
+        <label for="sub_users">Sub Users:</label>
+        <input type="number" id="sub_users" name="sub_users" required>
+
+        <label for="wallet_amount">Wallet Amount:</label>
+        <input type="number" id="wallet_amount" name="wallet_amount" step="any" required>
+
+        <label for="is_unlimited">Is Unlimited?</label>
+        <select id="is_unlimited" name="is_unlimited" required>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+
+        <label for="plan_type">Plan_type?</label>
+        <select id="plan_type" name="plan_type" required>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+
+        <label for="subscription_count">Subscription Count:</label>
+        <input type="number" id="subscription_count" name="subscription_count" required>
+
+        <label for="invitations">Invitations:</label>
+        <input type="number" id="invitations" name="invitations" required>
+
+        <label for="pre_recorded_kit_counts">Pre-recorded Kit Counts:</label>
+        <input type="number" id="pre_recorded_kit_counts" name="pre_recorded_kit_counts" required>
+
+        <label for="number_of_jobs_posted">Number of Jobs Posted:</label>
+        <input type="number" id="number_of_jobs_posted" name="number_of_jobs_posted" required>
+
+        <label for="pre_rec_interview_taken">Pre-recorded Interviews Taken:</label>
+        <input type="number" id="pre_rec_interview_taken" name="pre_rec_interview_taken" required>
+
+        <label for="subscription_amount_usd">Subscription Amount (USD):</label>
+        <input type="number" id="subscription_amount_usd" name="subscription_amount_usd" required>
+
+        <label for="days_since_login">Days Since Login:</label>
+        <select id="days_since_login" name="days_since_login" required>
+            <option value="0-323">0-323</option>
+            <option value="324-380">324-380</option>
+            <option value="381-440">381-440</option>
+            <option value="441-510">441-510</option>
+            <option value="511-580">511-580</option>
+            <option value="581-600">581-600</option>
+            <option value="601-650">601-650</option>
+            <option value="651-680">651-680</option>
+            <option value="681-730">681-730</option>
+            <option value="731-800">731-800</option>
+            <option value="801-900">801-900</option>
+            <option value="901-1000">901-1000</option>
+            <option value="1001-1200">1001-1200</option>
+            <option value="1201-1350">1201-1350</option>
+            <option value="1351-1500">1351-1500</option>
+            <option value="1501-1640">1501-1640</option>
+            <option value="1641-5000">1641-5000</option>
+        </select>
+
+        <button type="submit">Get Recommendations</button>
+    </form>
+    <a href="/home">Back to Home</a>
+
+    {% if recommendations %}
+    <div class="container">
+        <h3>Recommendations:</h3>
+        <p>{{ recommendations }}</p>
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>
