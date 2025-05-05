@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Candidate Recommendations</title>
+    <title>Client Recommendations</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             line-height: 1.2;
-            margin: 0;
-            padding: 0;
+            margin: 25px;
+            padding: 10px;
             background: #f4f4f4;
         }
         .container {
@@ -42,7 +42,7 @@
         th, td {
             border: 1px solid #ccc;
             padding: 10px;
-            text-align: left;
+            text-align: center;
             white-space: normal;
             word-break: break-word;
         }
@@ -63,7 +63,6 @@
             border-radius: 5px;
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .container {
                 width: 95%;
@@ -80,7 +79,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>Top {{ top_n }} similar candidates from dataset</h2>
+        <h2>Top similar candidates from dataset</h2>
         <div class="table-container">
             {% if not candidates %}
                 <p>No recommendations found. Please try again with different inputs.</p>
@@ -88,7 +87,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th scope="col">Candidate</th>
+                            <th scope="col">Client id</th>
                             <th scope="col">Similarity</th>
                             {% for key in candidates[0].details.keys() %}
                                 <th>{{ key }}</th>

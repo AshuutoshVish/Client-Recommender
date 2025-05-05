@@ -81,17 +81,15 @@ def recommend():
     sample_processed = pipeline.transform(sample_df)
     sample_tensor = torch.tensor(sample_processed, dtype=torch.float32)
     
-    # Get the embedding for the sample
+    # Get the embedding for sample
     with torch.no_grad():
         _, sample_embedding = model(sample_tensor)
     
     # Compute similarities
     sample_embedding_np = sample_embedding.numpy()
     similarities = cosine_similarity(sample_embedding_np, embeddings)[0]
-    
-    # Get top 5 similar candidates
     top_indices = np.argsort(similarities)[::-1][:5]
-    
+
     candidates = []
     for idx in top_indices:
         similarity_score = similarities[idx]
@@ -102,7 +100,7 @@ def recommend():
             "details": candidate_details
         })
     
-    # Render the results page
+    # Render to result page
     return render_template('results.html', candidates=candidates, top_n=5)
 
 if __name__ == '__main__':
