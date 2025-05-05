@@ -4,8 +4,7 @@ import torch.nn as nn
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-from joblib import load
-
+import joblib
 
 def log_transform_safe(x):
     x = x.copy()
@@ -18,18 +17,11 @@ def clean_binary(X):
 def clean_categorical(X):
     return X.apply(lambda col: col.map(lambda val: str(val).strip().lower() if pd.notnull(val) else 'others'))
 
-
 def clean_numerical(X):
     return X.apply(lambda col: pd.to_numeric(col, errors='coerce'))
 
 def clean_ordinal(X):
     return X.apply(lambda col: pd.to_numeric(col, errors='coerce')).clip(lower=0)
-
-
-# --- Load Assets ---
-pipeline = load('preprocess_pipeline.pkl')
-embeddings = np.load('embeddings.npy')
-original_df = pd.read_csv('original_data.csv')
 
 class Autoencoder(nn.Module):
     def __init__(self, input_dim):
@@ -55,7 +47,13 @@ class Autoencoder(nn.Module):
         reconstructed = self.decoder(embeddings)
         return reconstructed, embeddings
 
+# Load model, embeddings, and pipeline
+original_df = pd.read_csv('original_data.csv')
+embeddings = np.load('embeddings.npy')
+pipeline = joblib.load('preprocess_pipeline.pkl')
 
+
+# Load the original dataset, model, and embeddings
 data = pd.read_csv('original_data.csv')
 input_dim = pipeline.transform(data).shape[1]
 model = Autoencoder(input_dim)
@@ -65,34 +63,47 @@ embeddings = np.load('embeddings.npy')
 candidates_df = data
 
 
+
 app = Flask(__name__)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/home', methods=['POST'])
-def home():
+@app.route('/home')
+def myhome():
     return render_template('home.html')
 
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 @app.route('/recommend', methods=['POST'])
 def recommend():
-    try:
-        user_input = request.form.to_dict()
-        user_input_df = pd.DataFrame([user_input])
-        user_input_df = pipeline.transform(user_input_df)
-
-        with torch.no_grad():
-            _, user_embedding = model(torch.tensor(user_input_df.values, dtype=torch.float32))
-
-        similarities = cosine_similarity(user_embedding.numpy(), embeddings)
-        top_indices = np.argsort(similarities[0])[::-1][:5]
-
-        recommendations = candidates_df.iloc[top_indices].to_dict(orient='records')
-        return jsonify(recommendations)
-    except Exception as e:
-        return jsonify({"error": str(e)})
+    candidate = {key: request.form[key] for key in request.form}    
+    sample_df = pd.DataFrame([candidate])
+    sample_processed = pipeline.transform(sample_df)
+    sample_tensor = torch.tensor(sample_processed, dtype=torch.float32)
+    
+    # Get the embedding for the sample
+    with torch.no_grad():
+        _, sample_embedding = model(sample_tensor)
+    
+    # Compute similarities
+    sample_embedding_np = sample_embedding.numpy()
+    similarities = cosine_similarity(sample_embedding_np, embeddings)[0]
+    
+    # Get top 5 similar candidates
+    top_indices = np.argsort(similarities)[::-1][:5]
+    
+    candidates = []
+    for idx in top_indices:
+        similarity_score = similarities[idx]
+        candidate_details = candidates_df.iloc[idx].to_dict()
+        candidates.append({
+            "index": idx,
+            "similarity": f"{similarity_score:.4f}",
+            "details": candidate_details
+        })
+    
+    # Render the results page
+    return render_template('results.html', candidates=candidates, top_n=5)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

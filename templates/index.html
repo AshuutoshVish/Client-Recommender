@@ -72,7 +72,7 @@
 <body>
 <div class="container">
     <h2>Client Recommender</h2>
-    <form action="/" method="POST">
+    <form action="/recommend" method="POST">
         <label for="company_size">Company Size:</label>
         <select id="company_size" name="company_size" required>
             <option value="1-25">1-25</option>
@@ -84,38 +84,38 @@
 
         <label for="is_premium">Is Premium?</label>
         <select id="is_premium" name="is_premium" required>
-            <option value="0">No</option>
-            <option value="1">Yes</option>
+            <option value="0">Yes</option>
+            <option value="1">No</option>
         </select>
 
-        <label for="subscription_status">Subscription Status ?</label>
+        <label for="subscription_status">Subscription Status</label>
         <select id="subscription_status" name="subscription_status" required>
-            <option value="1">No</option>
             <option value="2">Yes</option>
+            <option value="1">No</option>
         </select>
 
         <label for="jobma_catcher_status">Jobma Catchr status  ?</label>
         <select id="jobma_catcher_status" name="jobma_catcher_status" required>
+            <option value="0">Yes</option>
             <option value="1">No</option>
-            <option value="2">Yes</option>
         </select>
 
         <label for="sub_users">Sub Users:</label>
         <input type="number" id="sub_users" name="sub_users" required>
 
         <label for="wallet_amount">Wallet Amount:</label>
-        <input type="number" id="wallet_amount" name="wallet_amount" step="any" required>
+        <input type="number" id="wallet_amount" name="wallet_amount" step="0.6" required>
 
         <label for="is_unlimited">Is Unlimited?</label>
         <select id="is_unlimited" name="is_unlimited" required>
-            <option value="0">No</option>
             <option value="1">Yes</option>
+            <option value="0">No</option>
         </select>
 
         <label for="plan_type">Plan_type?</label>
         <select id="plan_type" name="plan_type" required>
-            <option value="0">No</option>
-            <option value="1">Yes</option>
+            <option value="1">1</option>
+            <option value="0">0</option>
         </select>
 
         <label for="subscription_count">Subscription Count:</label>
@@ -133,8 +133,8 @@
         <label for="pre_rec_interview_taken">Pre-recorded Interviews Taken:</label>
         <input type="number" id="pre_rec_interview_taken" name="pre_rec_interview_taken" required>
 
-        <label for="subscription_amount_usd">Subscription Amount (USD):</label>
-        <input type="number" id="subscription_amount_usd" name="subscription_amount_usd" required>
+        <label for="subscription_sum">Subscription Amount (USD):</label>
+        <input type="number" id="subscription_sum" name="subscription_sum" required>
 
         <label for="days_since_login">Days Since Login:</label>
         <select id="days_since_login" name="days_since_login" required>
@@ -160,13 +160,6 @@
         <button type="submit">Get Recommendations</button>
     </form>
     <a href="/home">Back to Home</a>
-
-    {% if recommendations %}
-    <div class="container">
-        <h3>Recommendations:</h3>
-        <p>{{ recommendations }}</p>
-    </div>
-    {% endif %}
 </div>
 </body>
 </html>
